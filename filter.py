@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import re
-from datetime import date
+from datetime import date, datetime
 
 
 #Data sources:
@@ -10,8 +10,8 @@ from datetime import date
 #    source datasets to remove = Filtering/Source_datasets
 
 
-pop_data = pd.read_csv('../nbn_api/collated_data_20230122.csv', dtype=str)
-taxa_data = pd.read_excel('../nbn_api/taxa_data_2019_2023.xlsx')
+pop_data = pd.read_csv('data/collated_data_20230122.csv', dtype=str)
+taxa_data = pd.read_excel('data/taxa_data_2019_2023.xlsx')
 # source_datasets = pd.read_excel('data_resource_names.xlsx')
 
 # Identify datasets which are to be kept
@@ -122,8 +122,9 @@ output = [
     ]
 
 # Write output to CSV
+formatted_datetime = datetime.now().strftime('%Y-%m-%d_%H%M')
 filtered_data = pd.concat(output)
-filtered_data.to_csv('Filtering_option_7.csv')
+filtered_data.to_csv(f'output/filter_output_{formatted_datetime}.csv')
 
 # Write taxa data with before and after counts to csv
 # taxa_data = taxa_data.apply(count_entries, axis=1, args=(filtered_data, 'Count'))
