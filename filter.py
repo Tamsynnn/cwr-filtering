@@ -82,36 +82,36 @@ print('Not scarce or rare:', len(not_scarce_pop.index))
 # Split into herbaceous and woody life form
 q_herbaceous = not_scarce['Life_form'].str.contains('Herbaceous')
 print(f'Herbaceous taxa: {np.sum(q_herbaceous)}')
-herbaceous = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(not_scarce[q_herbaceous]['Taxon'])].fillna(0)
+herbaceous_pop = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(not_scarce[q_herbaceous]['Taxon'])].fillna(0)
 
 q_woody = not_scarce['Life_form'].str.contains('Woody')
 print(f'Woody taxa: {np.sum(q_woody)}')
-woody = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(not_scarce[q_woody]['Taxon'])].fillna(0)
+woody_pop = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(not_scarce[q_woody]['Taxon'])].fillna(0)
 
-print('Herbaceous records:', len(herbaceous.index))
-print('Woody records:', len(woody.index))
+print('Herbaceous records:', len(herbaceous_pop.index))
+print('Woody records:', len(woody_pop.index))
 
-# Remove records older than 25 and 100 years from herbaceous and woody respectively
+# Remove records older than 5 and 15 years from herbaceous and woody respectively
 current_year = int(date.today().year)
 age_limits = {
-    'herbaceous': 25,
-    'woody': 40
+    'herbaceous': 5,
+    'woody': 15,
 }
 
 
-q_blank_year_herbaceous = herbaceous['year'] == ''
-q_herbaceous_recent = herbaceous[~q_blank_year_herbaceous]['year'].astype('int32') + age_limits['herbaceous'] >= current_year
-herbaceous_recent = herbaceous[q_herbaceous_recent]
-herbaceous_recent_pop = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(herbaceous_recent['scientificName_2019'])]
+q_blank_year_herbaceous = herbaceous_pop['year'] == ''
+q_herbaceous_recent = herbaceous_pop[~q_blank_year_herbaceous]['year'].astype('int32') + age_limits['herbaceous'] >= current_year
+herbaceous_recent_pop = herbaceous_pop[q_herbaceous_recent]
 
+q_blank_year_woody = woody_pop['year'] == ''
+q_woody_recent = woody_pop[~q_blank_year_woody]['year'].astype('int32') + age_limits['woody'] >= current_year
+woody_recent_pop = woody_pop[q_woody_recent]
 
-q_blank_year_woody = woody['year'] == ''
-q_woody_recent = woody[~q_blank_year_woody]['year'].astype('int32') + age_limits['woody'] >= current_year
-woody_recent = woody[q_woody_recent]
-woody_recent_pop = not_scarce_pop[not_scarce_pop['scientificName_2019'].isin(woody_recent['scientificName_2019'])]
+print('Herbaceous recent taxa:', len(herbaceous_recent_pop.index))
+print('Woody recent taxa:', len(woody_recent_pop.index))
 
-print('Herbaceous recent:', len(herbaceous_recent.index))
-print('Woody recent:', len(woody_recent.index))
+print('Herbaceous recent pop:', len(herbaceous_recent_pop.index))
+print('Woody recent pop:', len(woody_recent_pop.index))
 
 # Output datasets
 output = [
